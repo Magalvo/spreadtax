@@ -1,0 +1,242 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,200;1,400&display=swap');
+
+:root {
+  --ink: #0f1117;
+  --ink-muted: #5a5e6b;
+  --ink-faint: #a0a4b0;
+  --surface: #f5f4f0;
+  --surface-warm: #ede9e1;
+  --white: #ffffff;
+  --accent: #1a4d3b;
+
+  --inverse-accent: #0f1117;
+  --accent-bright: #22c77a;
+  --accent-light: #d4f5e5;
+  --gold: #c8a84b;
+  --gold-light: #faf3e0;
+  --border: rgba(15, 17, 23, 0.1);
+  --border-mid: rgba(15, 17, 23, 0.2);
+  --font-display: 'DM Serif Display', serif;
+  --font-body: 'Instrument Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --r: 4px;
+  --rlg: 12px;
+}
+
+[data-theme='dark'] {
+  --ink: #f5f4f0;
+  --ink-muted: #a0a4b0;
+  --ink-faint: #5a5e6b;
+  --surface: #0f1117;
+  --surface-warm: #1a1f2e;
+  --white: #1a1f2e;
+  --accent: #22c77a;
+  --inverse-accent: #0f1117;
+  --accent-bright: #22c77a;
+  --accent-light: rgba(34, 199, 122, 0.15);
+  --gold: #d4af37;
+  --gold-light: rgba(212, 175, 55, 0.15);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-mid: rgba(255, 255, 255, 0.12);
+}
+
+body {
+  background-image: url('/images/background.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 64px; /* match fixed navbar height */
+  font-family: 'Montserrat', sans-serif;
+  min-height: 100vh;
+}
+
+footer {
+  padding-top: 2rem;
+  left: 0;
+  bottom: 0%;
+  width: 100%;
+  height: auto; /* Set the height of the footer */
+  background-color: #5b5d5e52;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-bg-color {
+  background-color: #f16225c6;
+}
+
+/* .bg-img {
+  background-image: url('/images/orrranje-removebg-preview.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+} */
+
+.title a {
+  font-size: 40px;
+}
+/* .container .col {
+  padding: 3rem 2rem;
+} */
+
+.navbar-brand {
+  font-size: 35px;
+  text-shadow: 1px 1px #0163c4c7;
+}
+.navbar-brand span {
+  color: rgba(255, 94, 0, 0.916);
+  font-size: 35px;
+  text-shadow: 1px 1px #0163c4c7;
+}
+
+.navbar-nav {
+  font-size: 20px;
+}
+
+.section-padding {
+  padding: 100px 0;
+}
+.carousel {
+  padding-top: none;
+}
+
+.carousel-item {
+  height: 100vh;
+  min-height: 300px;
+}
+
+.carousel-caption {
+  bottom: 400px;
+  z-index: 2;
+}
+
+.carousel-caption h5 {
+  font-size: 50px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 25px;
+  text-shadow: 1px 1px #ffffff;
+}
+
+.carousel-caption p {
+  width: 60%;
+  margin: auto;
+  font-size: 18px;
+  line-height: 1.9;
+}
+
+.container h1 {
+  font-size: 50px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 25px;
+
+  text-shadow: 1px 1px white;
+}
+
+.pricing {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+/* .boxed {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+} */
+.boxede {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* .boxed {
+  box-shadow: 0px 0px 50px #a0a0a0;
+} */
+
+.btn-custom {
+  background-color: #f16225;
+  color: #ffffff;
+}
+
+.btn-colors {
+  transition: transform 0.2s;
+  border-color: #f16225;
+  background-color: #f16225;
+  color: #ffffff;
+}
+
+.btn-colors:hover {
+  border-color: azure;
+  transform: scale(1.2);
+  color: #f16225;
+  background-color: azure;
+}
+
+.user-info {
+  color: #f16225;
+  font-size: medium;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.carousel-caption {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.carousel-caption h5 {
+  text-align: center;
+}
+
+.client-logo {
+  border: 6px outset #f16225c6;
+}
+
+.zoom {
+  padding: 20px;
+  transition: transform 0.2s; /* Animation */
+  width: 200px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.zoom:hover {
+  transform: scale(
+    1.5
+  ); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
+/* Default styles for the navbar */
+.navbar {
+  padding: 10px; /* Adjust as needed */
+}
+
+.navbar-brand {
+  font-size: 24px; /* Adjust as needed */
+}
+
+.navbar-nav .nav-link {
+  margin-right: 10px; /* Adjust as needed */
+}
+
+/* Media query for screens smaller than 768px (mobile devices) */
+@media (max-width: 767.98px) {
+  .navbar-brand {
+    font-size: 20px; /* Adjust as needed */
+  }
+
+  .navbar-nav .nav-link {
+    margin-right: 5px; /* Adjust as needed */
+  }
+}
+
+.carousel-bg {
+  background-color: #ffffff7f;
+  border: 1px ridge black;
+  padding: 0.8rem;
+  font-size: 9rem;
+}

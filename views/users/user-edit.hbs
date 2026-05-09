@@ -1,0 +1,108 @@
+<div class='container'>
+  <h1>Edit user</h1>
+
+  <a
+    type='button'
+    class='btn btn-secondary btn-default'
+    href='/user/{{user.id}}'
+  >Back</a>
+  <hr />
+
+  <form
+    novalidate
+    action='/user/{{user.id}}/edit'
+    method='POST'
+    enctype='multipart/form-data'
+  >
+    <div class='form-floating'>
+      <input
+        class='form-control'
+        type='text'
+        name='username'
+        placeholder='username'
+        value='{{user.username}}'
+        required
+      />
+      <label for=''>username</label>
+    </div>
+
+    <br />
+
+    <div class='form-floating'>
+      <input
+        class='form-control'
+        type='email'
+        name='email'
+        placeholder='email'
+        value='{{user.email}}'
+        required
+      />
+      <label for='email'>email</label>
+    </div>
+
+    <br />
+    <div class='form-floating'>
+      <input
+        class='form-control'
+        type='file'
+        name='image'
+        value='{{user.imageUrl}}'
+        placeholder='{{user.imageUrl}}'
+      />
+      <label for='companyImage'>Company Image:</label>
+      <br />
+    </div>
+
+    <button class='btn btn-lg btn-primary' type='submit'>Save changes</button>
+  </form>
+
+  <br />
+  <form action='/user/change-password' method='POST'>
+
+    <div class='form-floating'>
+      <input
+        class='form-control'
+        type='password'
+        name='password'
+        placeholder='Enter your password'
+        required
+      />
+      <label for='password'>Input Current Password</label>
+    </div>
+    <br />
+    <div class='form-floating'>
+      <input
+        class='form-control'
+        type='password'
+        name='newPassword'
+        placeholder='Enter your new password'
+        required
+      />
+      <label for='newPassword'>Input New Password</label>
+    </div>
+    <br />
+    <div class='form-floating'>
+      <input
+        class='form-control'
+        type='password'
+        name='confirmedPassword'
+        placeholder='Reenter New Password'
+        required
+      />
+      <label for='confirmedPassword'>Confirm New Password</label>
+    </div>
+    <br />
+    <button type='submit' class='btn btn-lg btn-primary'>
+      Change Password
+    </button>
+  </form>
+
+</div>
+
+{{#if errorMessage}}
+  <div class='alert alert-danger' role='alert'>
+    <div style='color: red'>
+      {{errorMessage}}
+    </div>
+  </div>
+{{/if}}

@@ -1,0 +1,407 @@
+<style>
+  /* ── Header / Nav ── */
+  body,
+  html {
+    transition:
+      background 0.3s ease,
+      color 0.3s ease;
+  }
+
+  .st-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4rem;
+    height: 64px;
+    background: rgba(245, 244, 240, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  [data-theme="dark"] .st-nav {
+    background: rgba(15, 17, 23, 0.94);
+  }
+
+  /* Logo */
+  .st-nav__brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+    height: 32px;
+  }
+  .st-nav__brand img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .st-nav__left,
+  .st-nav__right {
+    display: flex;
+    align-items: center;
+  }
+
+  .st-nav__left {
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .st-nav__right {
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+
+  /* Theme toggle button */
+  .st-theme-toggle {
+    background: transparent;
+    border: 1px transparent var(--border-mid);
+    border-radius: var(--r);
+    padding: 0.5rem 0.7rem;
+    cursor: pointer;
+    color: var(--ink-muted);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s;
+  }
+  .st-theme-toggle:hover {
+    border-color: var(--border);
+    color: var(--ink);
+    background: rgba(15, 17, 23, 0.05);
+  }
+  [data-theme="dark"] .st-theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Links wrapper */
+  .st-nav__links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+
+  .st-nav__link {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--r);
+    transition:
+      color 0.18s,
+      background 0.18s,
+      border-color 0.18s;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .st-nav__link:hover {
+    color: var(--ink);
+    background: rgba(15, 17, 23, 0.05);
+    border-color: var(--border-mid);
+  }
+  [data-theme="dark"] .st-nav__link:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Greeting / account-type badge (non-linked) */
+  .st-nav__greeting {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    color: var(--ink-muted);
+    padding: 0.5rem 0.875rem;
+    white-space: nowrap;
+  }
+
+  .st-nav__badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    font-weight: 500;
+    transition: all 0.18s;
+  }
+
+  /* Primary CTA button */
+  .st-nav__cta {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--white);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 0.5rem 1.125rem;
+    border-radius: var(--r);
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      background 0.18s,
+      border-color 0.18s,
+      transform 0.15s;
+    white-space: nowrap;
+  }
+  .st-nav__cta:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  /* Logout form — strip all form chrome */
+  .st-nav__logout-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+  }
+  .st-nav__logout-btn {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    background: transparent;
+    border: 1px solid var(--border-mid);
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--r);
+    cursor: pointer;
+    transition:
+      border-color 0.18s,
+      color 0.18s,
+      background 0.18s;
+    white-space: nowrap;
+  }
+  .st-nav__logout-btn:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+    background: rgba(15, 17, 23, 0.03);
+  }
+  [data-theme="dark"] .st-nav__logout-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Mobile hamburger */
+  .st-nav__toggle {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--border-mid);
+    border-radius: var(--r);
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .st-nav__toggle span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 1px;
+    transition:
+      transform 0.2s,
+      opacity 0.2s;
+  }
+
+  @media (max-width: 900px) {
+    .st-nav {
+      padding: 0 1.5rem;
+    }
+
+    .st-nav__toggle {
+      display: flex;
+    }
+
+    .st-nav__links {
+      display: none;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: rgba(245, 244, 240, 0.96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem 1.5rem 1.5rem;
+      gap: 0.25rem;
+    }
+    .st-nav__links.is-open {
+      display: flex;
+    }
+    [data-theme="dark"] .st-nav__links {
+      background: rgba(15, 17, 23, 0.96);
+    }
+  }
+</style>
+
+<header>
+  <nav class="st-nav" role="navigation" aria-label="Main navigation">
+
+    <div class="st-nav__left">
+      <a class="st-nav__brand" href="/" title="SpreadTax Home">
+        <img src="/images/HandlebarsNewSpread.png" alt="SpreadTax Logo" />
+      </a>
+
+    </div>
+
+    <div class="st-nav__right">
+
+      {{! Mobile toggle }}
+      <button
+        class="st-nav__toggle"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+        aria-controls="st-nav-links"
+        onclick="(function(btn){
+          var menu = document.getElementById('st-nav-links');
+          var open = menu.classList.toggle('is-open');
+          btn.setAttribute('aria-expanded', open);
+        })(this)"
+        type="button"
+      >
+        <span></span>
+      </button>
+
+      <ul class="st-nav__links" id="st-nav-links">
+
+        <li><a class="st-nav__link" href="/">Home</a></li>
+        <li><a class="st-nav__link" href="/#about">About Us</a></li>
+        <li><a class="st-nav__link" href="/#plans">Pricing</a></li>
+
+        {{#if currentUser}}
+          {{#if currentUser.isAdmin}}
+            <li>
+              <span class="st-nav__greeting">Hello,
+                {{currentUser.username}}</span>
+            </li>
+            <li>
+              <a class="st-nav__link" href="/user/dashboard">Dashboard</a>
+            </li>
+            <li>
+              <a class="st-nav__link" href="/clients/new">Add client</a>
+            </li>
+            <li>
+              <a
+                class="st-nav__link"
+                href="/user/{{currentUser._id}}/edit"
+              >Settings</a>
+            </li>
+            <li>
+              {{#if currentUser.accountType.isFree}}
+                <span class="st-nav__badge">Free</span>
+              {{/if}}
+              {{#if currentUser.accountType.isPremium}}
+                <span class="st-nav__badge">Premium</span>
+              {{/if}}
+              {{#if currentUser.accountType.isUnlimited}}
+                <span class="st-nav__badge">Unlimited</span>
+              {{/if}}
+            </li>
+          {{else}}
+            <li>
+              <span class="st-nav__greeting">Hello,
+                {{currentUser.companyName}}</span>
+            </li>
+            <li>
+              <a class="st-nav__link" href="/client/dashboard">Dashboard</a>
+            </li>
+          {{/if}}
+        {{/if}}
+
+        {{#unless currentUser}}
+          <li><a class="st-nav__link" href="/signup">Register</a></li>
+          <li><a class="st-nav__cta" href="/login">Login</a></li>
+        {{/unless}}
+
+        {{#if currentUser}}
+          <li>
+            <form action="/logout" method="POST" class="st-nav__logout-form">
+              <button class="st-nav__logout-btn" type="submit">Logout</button>
+            </form>
+          </li>
+        {{/if}}
+
+        {{! Theme toggle }}
+        <button
+          class="st-theme-toggle"
+          id="theme-toggle"
+          aria-label="Toggle dark mode"
+          type="button"
+          title="Toggle theme"
+        >
+          <span id="theme-icon">🌙</span>
+        </button>
+      </ul>
+
+    </div>
+  </nav>
+</header>
+
+<script>
+  (function () {
+    const htmlElement = document.documentElement;
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const THEME_KEY = 'spreadtax-theme';
+    const LIGHT = 'light';
+    const DARK = 'dark';
+
+    function getSystemTheme() {
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? DARK
+        : LIGHT;
+    }
+
+    function getStoredTheme() {
+      return localStorage.getItem(THEME_KEY) || getSystemTheme();
+    }
+
+    function setTheme(theme) {
+      const isDark = theme === DARK;
+      htmlElement.setAttribute('data-theme', theme);
+
+      if (document.body) {
+        document.body.setAttribute('data-theme', theme);
+      }
+
+      if (themeIcon) {
+        themeIcon.textContent = isDark ? '☀️' : '🌙';
+      }
+    }
+
+    const initialTheme = getStoredTheme();
+    setTheme(initialTheme);
+
+    if (themeToggle) {
+      themeToggle.addEventListener('click', function () {
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === LIGHT ? DARK : LIGHT;
+        localStorage.setItem(THEME_KEY, newTheme);
+        setTheme(newTheme);
+      });
+    }
+
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (event) {
+        if (!localStorage.getItem(THEME_KEY)) {
+          setTheme(event.matches ? DARK : LIGHT);
+        }
+      });
+    }
+  })();
+</script>

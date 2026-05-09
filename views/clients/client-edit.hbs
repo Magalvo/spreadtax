@@ -1,0 +1,135 @@
+<div class='container'>
+  <h1>Edit Client</h1>
+
+  <a
+    type='button'
+    class='btn btn-secondary btn-default btn-colors'
+    href='/clients/{{client.id}}'
+  >Back</a>
+  <hr />
+  <form
+    novalidate
+    action='/clients/edit?id={{client.id}}'
+    method='POST'
+    enctype='multipart/form-data'
+  >
+
+    <div class='form-floating'>
+      <input
+        class='form-control'
+        type='text'
+        name='companyName'
+        placeholder='username'
+        value='{{client.companyName}}'
+        required
+      />
+      <label for=''>{{client.companyName}}</label>
+    </div>
+
+    <br />
+
+    <div class='form-floating'>
+      <input
+        class='form-control'
+        type='email'
+        name='email'
+        placeholder='email'
+        value='{{client.email}}'
+        required
+      />
+      <label for='email'>{{client.email}}</label>
+    </div>
+    <br />
+
+    <br />
+    <div class='form-floating'>
+      <input
+        disabled='disabled'
+        class='form-control'
+        type='text'
+        minlength='9'
+        maxlength='9'
+        name='nipc'
+        required
+      />
+      <label for='nipc'>{{client.nipc}}</label>
+    </div>
+    <br />
+    <div class='form-floating'>
+      <input
+        disabled='disabled'
+        class='form-control'
+        type='text'
+        minlength='11'
+        maxlength='11'
+        name='niss'
+        required
+      />
+      <label for='niss'>{{client.niss}}</label>
+    </div>
+
+    <br />
+    <div class='form-floating'>
+      <input
+        class='form-control'
+        type='text'
+        name='address'
+        placeholder='address'
+        value='{{client.address}}'
+        required
+      />
+      <label for='address'> {{client.address}} </label>
+    </div>
+
+    <br />
+    <div class='form-floating'>
+      <input
+        class='form-control'
+        type='file'
+        name='image'
+        value='{{client.imageUrl}}'
+        placeholder='{{client.imageUrl}}'
+      />
+      <label for='companyImage'>Company Image:</label>
+      <br />
+    </div>
+    <br />
+
+    <button class='btn btn-primary' type='submit'>Save</button>
+  </form>
+  <form
+    action='/clients/{{client.id}}/delete'
+    method='POST'
+    onsubmit="return confirm('Are you sure you want to delete {{client.companyName}}?')"
+  >
+    <button class='btn btn-danger'>
+      Delete client
+    </button>
+    <div id='id01' class='modal'>
+      <span
+        onclick="document.getElementById('id01').style.display='none'"
+        class='close'
+        title='Close Modal'
+      >&times;</span>
+      <form class='modal-content' action='/action_page.php'>
+        <div class='container'>
+          <h1>Delete Account</h1>
+          <p>Are you sure you want to delete your account?</p>
+
+          <div class='clearfix'>
+            <button type='button' class='cancelbtn'>Cancel</button>
+            <button type='button' class='deletebtn'>Delete</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </form>
+</div>
+
+{{#if errorMessage}}
+  <div class='alert alert-danger' role='alert'>
+    <div style='color: red'>
+      {{errorMessage}}
+    </div>
+  </div>
+{{/if}}

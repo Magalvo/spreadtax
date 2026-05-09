@@ -1,0 +1,1220 @@
+{{! =====================================================================
+    SpreadTax — index.hbs (redesigned)
+    All Handlebars partials, form actions, and URL references preserved.
+    Bootstrap dependency removed; all styles are self-contained below.
+    ===================================================================== }}
+
+<style>
+  /* ── Reset ── */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ── Base ── */
+  body {
+    font-family: var(--font-body);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  /* ════════════════════════════════════
+     HERO
+  ════════════════════════════════════ */
+  .st-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+  }
+
+  .st-hero__left {
+    padding: 8rem 4rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--surface);
+    transition: background-color 0.3s ease;
+  }
+
+  .st-hero__right {
+    background: var(--accent);
+    transition: background-color 0.3s ease;
+  }
+
+  .st-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .st-eyebrow::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+    display: block;
+  }
+
+  .st-hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+  .st-hero__title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .st-hero__desc {
+    font-size: 1.0625rem;
+    color: var(--ink-muted);
+    max-width: 42ch;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  .st-hero__actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  /* ── Buttons ── */
+  .st-btn {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    padding: 0.875rem 2rem;
+    border-radius: var(--r);
+    border: 1px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      color 0.2s,
+      border-color 0.2s,
+      transform 0.15s;
+  }
+  .st-btn--primary {
+    background: var(--ink);
+    color: var(--white);
+    border-color: var(--ink);
+  }
+  .st-btn--primary:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .st-btn--ghost {
+    background: transparent;
+    color: var(--ink-muted);
+    border-color: var(--border-mid);
+  }
+  .st-btn--ghost:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+  .st-btn--green {
+    background: var(--accent-bright);
+    color: var(--ink);
+    border-color: transparent;
+    font-weight: 600;
+  }
+  .st-btn--green:hover {
+    background: #18a864;
+    transform: translateY(-1px);
+  }
+
+  /* ── Hero right panel (dashboard) ── */
+  .st-hero__right {
+    background: var(--accent);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 3rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .st-hero__grid-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 47px,
+        rgba(255, 255, 255, 0.5) 47px,
+        rgba(255, 255, 255, 0.5) 48px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 47px,
+        rgba(255, 255, 255, 0.5) 47px,
+        rgba(255, 255, 255, 0.5) 48px
+      );
+  }
+
+  .st-float {
+    position: absolute;
+    border-radius: var(--r);
+    font-size: 0.75rem;
+    padding: 0.6rem 1rem;
+    z-index: 2;
+    font-family: var(--font-mono);
+  }
+  .st-float--top {
+    top: 2rem;
+    right: 1.5rem;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .st-float--bottom {
+    bottom: 3rem;
+    left: 1.5rem;
+    background: var(--accent-bright);
+    color: var(--ink);
+    font-weight: 600;
+    font-family: var(--font-body);
+  }
+
+  /* ── Dashboard mock card ── */
+  .st-dash {
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: var(--rlg);
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    z-index: 1;
+    box-shadow:
+      0 32px 64px rgba(0, 0, 0, 0.25),
+      0 4px 16px rgba(0, 0, 0, 0.1);
+    animation: stFadeUp 0.8s 0.3s ease both;
+  }
+
+  .st-dash__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .st-dash__title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--inverse-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .st-dash__badge {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+  }
+
+  .st-dash__metric-label {
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    margin-bottom: 0.25rem;
+  }
+  .st-dash__metric-value {
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    color: var(--inverse-accent);
+    line-height: 1;
+    margin-bottom: 1.25rem;
+  }
+  .st-dash__metric-value span {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--accent-bright);
+    margin-left: 0.5rem;
+  }
+
+  .st-dash__bar-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    margin-bottom: 0.3rem;
+  }
+  .st-dash__bar-track {
+    height: 6px;
+    background: var(--surface-warm);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  .st-dash__bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+  .st-dash__bar-fill--gold {
+    background: var(--gold);
+  }
+
+  .st-dash__divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.25rem 0;
+  }
+
+  .st-dash__client {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .st-dash__client:last-child {
+    margin-bottom: 0;
+  }
+  .st-dash__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .st-dash__client-name {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--inverse-accent);
+    flex: 1;
+  }
+  .st-dash__status {
+    font-size: 0.6875rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+  }
+  .st-dash__status--done {
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+  .st-dash__status--pending {
+    background: var(--gold-light);
+    color: #7a5c0a;
+  }
+
+  /* ════════════════════════════════════
+     TICKER
+  ════════════════════════════════════ */
+  .st-ticker {
+    background: var(--ink);
+    padding: 0.75rem 0;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    transition: background-color 0.3s ease;
+  }
+  .st-ticker__inner {
+    display: flex;
+    gap: 4rem;
+    white-space: nowrap;
+    animation: stTicker 22s linear infinite;
+  }
+  .st-ticker__item {
+    color: var(--surface);
+    transition: color 0.3s ease;
+  }
+  .st-ticker__item strong {
+    color: var(--accent-bright);
+  }
+
+  /* ════════════════════════════════════
+     SECTION SHARED
+  ════════════════════════════════════ */
+  .st-section {
+    padding: 6rem 4rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .st-section-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: color 0.3s ease;
+  }
+  .st-section-label::after {
+    content: "";
+    max-width: 40px;
+    height: 1px;
+    background: var(--border-mid);
+    flex: 1;
+    transition: background 0.3s ease;
+  }
+
+  .st-h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  /* ════════════════════════════════════
+     ABOUT
+  ════════════════════════════════════ */
+  .st-about {
+    background: var(--white);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .st-about__desc {
+    color: var(--ink-muted);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    margin: 1.25rem 0 2rem;
+    transition: color 0.3s ease;
+  }
+
+  .st-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    list-style: none;
+  }
+  .st-features__item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.6rem 0.875rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease;
+  }
+  .st-features__item::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-bright);
+    flex-shrink: 0;
+  }
+
+  .st-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .st-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--rlg);
+    padding: 1.5rem;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease;
+  }
+  .st-stat--accent {
+    grid-column: 1 / -1;
+    background: var(--accent);
+    border-color: transparent;
+  }
+  .st-stat__number {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+    transition: color 0.3s ease;
+  }
+  .st-stat--accent .st-stat__number {
+    color: rgba(255, 255, 255, 0.92);
+  }
+  .st-stat__desc {
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    transition: color 0.3s ease;
+  }
+  .st-stat--accent .st-stat__desc {
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  /* ════════════════════════════════════
+     PLANS
+  ════════════════════════════════════ */
+  .st-plans {
+    background: var(--surface);
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+  .st-plans .st-section-label {
+    justify-content: center;
+  }
+  .st-plans .st-section-label::after {
+    display: none;
+  }
+
+  .st-plans__sub {
+    color: var(--ink-muted);
+    margin: 0.75rem auto 3.5rem;
+    max-width: 44ch;
+    transition: color 0.3s ease;
+  }
+
+  .st-plans__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    text-align: left;
+  }
+
+  .st-plan {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--rlg);
+    padding: 2rem;
+    position: relative;
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s,
+      background-color 0.3s ease,
+      border-color 0.3s ease;
+  }
+  .st-plan:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  }
+  .st-plan--featured {
+    background: var(--ink);
+    border-color: transparent;
+    color: var(--surface);
+  }
+
+  .st-plan__badge {
+    position: absolute;
+    top: -0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-bright);
+    color: var(--ink);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.75rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .st-plan__name {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+  }
+  .st-plan--featured .st-plan__name {
+    color: var(--ink-faint);
+  }
+
+  .st-plan__price {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--ink);
+    line-height: 1;
+    transition: color 0.3s ease;
+  }
+  .st-plan--featured .st-plan__price {
+    color: var(--surface);
+  }
+
+  .st-plan__period {
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    margin-bottom: 1.5rem;
+    transition: color 0.3s ease;
+  }
+  .st-plan--featured .st-plan__period {
+    color: var(--ink-muted);
+  }
+
+  .st-plan__divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 1.5rem;
+    transition: background 0.3s ease;
+  }
+  .st-plan--featured .st-plan__divider {
+    background: var(--border);
+  }
+
+  .st-plan__features {
+    list-style: none;
+    margin-bottom: 2rem;
+  }
+  .st-plan__feature {
+    font-size: 0.875rem;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.35rem 0;
+    transition: color 0.3s ease;
+  }
+  .st-plan--featured .st-plan__feature {
+    color: var(--surface);
+  }
+
+  .st-plan__feature::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-light)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 7l3 3 5-5' stroke='%231a4d3b' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      center/contain no-repeat;
+    flex-shrink: 0;
+    transition: background 0.3s ease;
+  }
+  .st-plan--featured .st-plan__feature::before {
+    background-color: var(--border);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 7l3 3 5-5' stroke='%2322c77a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  .st-plan__feature--dim {
+    color: var(--ink-faint);
+    text-decoration: line-through;
+    transition: color 0.3s ease;
+  }
+  .st-plan__feature--dim::before {
+    background-image: none;
+    background-color: var(--surface-warm);
+  }
+  .st-plan--featured .st-plan__feature--dim {
+    color: var(--ink-faint);
+  }
+  .st-plan--featured .st-plan__feature--dim::before {
+    background-color: var(--border);
+    background-image: none;
+  }
+
+  .st-plan__cta {
+    display: block;
+    text-align: center;
+    padding: 0.8125rem 1.5rem;
+    border-radius: var(--r);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    font-family: var(--font-body);
+    border: 1px solid var(--border-mid);
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      color 0.2s,
+      transform 0.15s,
+      border-color 0.3s ease;
+    background: var(--surface);
+    color: var(--ink);
+  }
+  .st-plan__cta:hover {
+    background: var(--accent);
+    color: var(--surface);
+    border-color: transparent;
+  }
+  .st-plan__cta--featured {
+    background: var(--accent-bright);
+    color: var(--ink);
+    border-color: transparent;
+  }
+  .st-plan__cta--featured:hover {
+    background: #18a864;
+  }
+
+  /* ════════════════════════════════════
+     REGISTER
+  ════════════════════════════════════ */
+  .st-register {
+    background: var(--ink);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+    transition: background-color 0.3s ease;
+  }
+  .st-register .st-section-label {
+    color: var(--ink-faint);
+  }
+  .st-register .st-section-label::after {
+    background: var(--border);
+  }
+  .st-register .st-h2 {
+    color: var(--surface);
+  }
+
+  .st-register__desc {
+    color: var(--ink-muted);
+    font-size: 1rem;
+    margin-top: 1rem;
+    line-height: 1.7;
+    transition: color 0.3s ease;
+  }
+
+  /* plan toggle buttons */
+  .st-reg-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    list-style: none;
+  }
+  .st-reg-tabs label {
+    padding: 0.4rem 0.875rem;
+    border-radius: var(--r);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-mid);
+    color: var(--ink-muted);
+    transition: all 0.2s;
+    user-select: none;
+    background: transparent;
+  }
+  .st-reg-tabs input[type="radio"] {
+    display: none;
+  }
+  .st-reg-tabs input[type="radio"]:checked + label,
+  .st-reg-tabs label:has(+ input[type="radio"]:checked) {
+    /* fallback handled by JS */
+  }
+  .st-reg-tabs label.is-active {
+    background: var(--border);
+    color: var(--surface);
+    border-color: var(--border-mid);
+  }
+
+  /* form fields */
+  .st-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .st-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .st-field label {
+    font-size: 0.8125rem;
+    color: var(--ink-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    transition: color 0.3s ease;
+  }
+  .st-field input {
+    background: var(--border);
+    border: 1px solid var(--border-mid);
+    border-radius: var(--r);
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+    color: var(--surface);
+    font-family: var(--font-body);
+    outline: none;
+    transition:
+      border-color 0.2s,
+      background-color 0.3s ease,
+      color 0.3s ease;
+    width: 100%;
+  }
+  .st-field input::placeholder {
+    color: var(--ink-faint);
+  }
+  .st-field input:focus {
+    border-color: var(--accent-bright);
+  }
+
+  .st-form__submit {
+    background: var(--accent-bright);
+    color: var(--ink);
+    border: none;
+    border-radius: var(--r);
+    padding: 0.875rem 2rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-body);
+    margin-top: 0.5rem;
+    transition:
+      background 0.2s,
+      transform 0.15s;
+    width: 100%;
+  }
+  .st-form__submit:hover {
+    background: #18a864;
+    transform: translateY(-1px);
+  }
+
+  .st-alert {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--r);
+    font-size: 0.875rem;
+    background: rgba(226, 75, 74, 0.15);
+    border: 1px solid rgba(226, 75, 74, 0.3);
+    color: #f09595;
+  }
+
+  /* ════════════════════════════════════
+     ANIMATIONS
+  ════════════════════════════════════ */
+  @keyframes stFadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes stTicker {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .st-hero__left > * {
+    animation: stFadeUp 0.7s ease both;
+  }
+  .st-hero__left > *:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  .st-hero__left > *:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .st-hero__left > *:nth-child(3) {
+    animation-delay: 0.25s;
+  }
+  .st-hero__left > *:nth-child(4) {
+    animation-delay: 0.35s;
+  }
+
+  /* ════════════════════════════════════
+     RESPONSIVE
+  ════════════════════════════════════ */
+  @media (max-width: 900px) {
+    .st-hero {
+      grid-template-columns: 1fr;
+    }
+    .st-hero__right {
+      display: none;
+    }
+    .st-hero__left {
+      padding: 6rem 1.5rem 4rem;
+    }
+    .st-section {
+      padding: 4rem 1.5rem;
+    }
+    .st-about {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .st-plans__grid {
+      grid-template-columns: 1fr;
+    }
+    .st-register {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .st-features {
+      grid-template-columns: 1fr;
+    }
+    .st-stats {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+{{! ─── HERO ─────────────────────────────────────────────── }}
+<section class="st-hero">
+  <div class="st-hero__left">
+    <span class="st-eyebrow">Accounting software</span>
+    <h1 class="st-hero__title">
+      Accounting<br />
+      <em>made simple,</em><br />
+      finally.
+    </h1>
+    <p class="st-hero__desc">
+      SpreadTax unites accountants and clients on one intelligent platform —
+      streamlining collaboration, automating data entry, and keeping finances
+      clear.
+    </p>
+    <div class="st-hero__actions">
+      <a href="/auth/signup?value=isFree" class="st-btn st-btn--primary">Start
+        for free</a>
+      <a href="#plans" class="st-btn st-btn--ghost">View plans</a>
+    </div>
+  </div>
+
+  <div class="st-hero__right" aria-hidden="true">
+    <div class="st-hero__grid-bg"></div>
+    <span class="st-float st-float--top">Q4 Report ready</span>
+
+    <div class="st-dash">
+      <div class="st-dash__header">
+        <span class="st-dash__title">Client Overview</span>
+        <span class="st-dash__badge">Live</span>
+      </div>
+      <div>
+        <div class="st-dash__metric-label">Total managed revenue</div>
+        <div class="st-dash__metric-value">$284,912 <span>+12.4%</span></div>
+      </div>
+      <div class="st-dash__bar-info"><span>Q3 Target</span><span
+        >78%</span></div>
+      <div class="st-dash__bar-track">
+        <div class="st-dash__bar-fill" style="width:78%"></div>
+      </div>
+      <div class="st-dash__bar-info"><span>Annual Tax Filing</span><span
+        >55%</span></div>
+      <div class="st-dash__bar-track">
+        <div
+          class="st-dash__bar-fill st-dash__bar-fill--gold"
+          style="width:55%"
+        ></div>
+      </div>
+      <div class="st-dash__divider"></div>
+      <div class="st-dash__client">
+        <div class="st-dash__avatar">MR</div>
+        <span class="st-dash__client-name">M. Rodriguez</span>
+        <span class="st-dash__status st-dash__status--done">Filed</span>
+      </div>
+      <div class="st-dash__client">
+        <div class="st-dash__avatar">JK</div>
+        <span class="st-dash__client-name">J. Kim &amp; Assoc.</span>
+        <span class="st-dash__status st-dash__status--pending">In review</span>
+      </div>
+      <div class="st-dash__client">
+        <div class="st-dash__avatar">SW</div>
+        <span class="st-dash__client-name">S. Williams</span>
+        <span class="st-dash__status st-dash__status--done">Filed</span>
+      </div>
+    </div>
+
+    <span class="st-float st-float--bottom">3 docs uploaded ↑</span>
+  </div>
+</section>
+
+{{! ─── TICKER ────────────────────────────────────────────── }}
+<div class="st-ticker" aria-hidden="true">
+  <div class="st-ticker__inner">
+    <span class="st-ticker__item">Clients managed:
+      <strong>10,000+</strong></span>
+    <span class="st-ticker__item">Cloud storage:
+      <strong>up to 2TB</strong></span>
+    <span class="st-ticker__item">Automated reports:
+      <strong>instant</strong></span>
+    <span class="st-ticker__item">Data encryption:
+      <strong>256-bit AES</strong></span>
+    <span class="st-ticker__item">Mobile access:
+      <strong>anywhere</strong></span>
+    <span class="st-ticker__item">Email scheduling:
+      <strong>built-in</strong></span>
+    {{! duplicate set keeps the loop seamless }}
+    <span class="st-ticker__item">Clients managed:
+      <strong>10,000+</strong></span>
+    <span class="st-ticker__item">Cloud storage:
+      <strong>up to 2TB</strong></span>
+    <span class="st-ticker__item">Automated reports:
+      <strong>instant</strong></span>
+    <span class="st-ticker__item">Data encryption:
+      <strong>256-bit AES</strong></span>
+    <span class="st-ticker__item">Mobile access:
+      <strong>anywhere</strong></span>
+    <span class="st-ticker__item">Email scheduling:
+      <strong>built-in</strong></span>
+  </div>
+</div>
+
+{{! ─── ABOUT ─────────────────────────────────────────────── }}
+<section class="st-section st-about" id="about">
+  <div>
+    <span class="st-section-label">About SpreadTax</span>
+    <h2 class="st-h2">Built for accountants<br />and their clients.</h2>
+    <p class="st-about__desc">
+      We believe accounting should be efficient, accurate, and accessible.
+      SpreadTax brings accountants and clients into one shared workspace — with
+      powerful automation, real-time reporting, and a transparent view of every
+      transaction.
+    </p>
+    <ul class="st-features">
+      <li class="st-features__item">Seamless Collaboration</li>
+      <li class="st-features__item">Automated Data Entry</li>
+      <li class="st-features__item">Customizable Reporting</li>
+      <li class="st-features__item">Secure Data Management</li>
+      <li class="st-features__item">Mobile Access</li>
+      <li class="st-features__item">Real-time Dashboard</li>
+    </ul>
+    <a href="/auth/signup?value=isFree" class="st-btn st-btn--primary">Sign up
+      today</a>
+  </div>
+
+  <div class="st-stats">
+    <div class="st-stat st-stat--accent">
+      <div class="st-stat__number">Zero</div>
+      <div class="st-stat__desc">Manual data entry required — our automation
+        handles the routine work so you can focus on what matters.</div>
+    </div>
+    <div class="st-stat">
+      <div class="st-stat__number">2TB</div>
+      <div class="st-stat__desc">Secure cloud storage on the Unlimited plan</div>
+    </div>
+    <div class="st-stat">
+      <div class="st-stat__number">∞</div>
+      <div class="st-stat__desc">Clients on the Unlimited plan — no cap</div>
+    </div>
+  </div>
+</section>
+
+{{! ─── PLANS ─────────────────────────────────────────────── }}
+<section class="st-section st-plans" id="plans">
+  <span class="st-section-label">Pricing</span>
+  <h2 class="st-h2">Simple, transparent pricing.</h2>
+  <p class="st-plans__sub">Start free and scale as your practice grows. No
+    hidden fees, no setup costs.</p>
+
+  <div class="st-plans__grid">
+
+    {{! Free }}
+    <div class="st-plan">
+      <div class="st-plan__name">Basic</div>
+      <div class="st-plan__price">$0</div>
+      <div class="st-plan__period">/month — Free forever</div>
+      <div class="st-plan__divider"></div>
+      <ul class="st-plan__features">
+        <li class="st-plan__feature">Optimized Client/Accountant Interface</li>
+        <li class="st-plan__feature">Manage up to 2 Clients</li>
+        <li class="st-plan__feature">10 GB Cloud Storage</li>
+        <li class="st-plan__feature st-plan__feature--dim">Premium Plan</li>
+        <li class="st-plan__feature st-plan__feature--dim">Unlimited Plan</li>
+      </ul>
+      <a href="/auth/signup?value=isFree" class="st-plan__cta">Get started free</a>
+    </div>
+
+    {{! Premium (featured) }}
+    <div class="st-plan st-plan--featured">
+      <div class="st-plan__badge">Most popular</div>
+      <div class="st-plan__name">Premium</div>
+      <div class="st-plan__price">$50</div>
+      <div class="st-plan__period">/month</div>
+      <div class="st-plan__divider"></div>
+      <ul class="st-plan__features">
+        <li class="st-plan__feature">Optimized Client/Accountant Interface</li>
+        <li class="st-plan__feature">Manage up to 4 Clients</li>
+        <li class="st-plan__feature">1 TB Cloud Storage</li>
+        <li class="st-plan__feature">Schedule Client Emails</li>
+        <li class="st-plan__feature st-plan__feature--dim">Unlimited Plan</li>
+      </ul>
+      <a
+        href="/auth/signup?value=isPremium"
+        class="st-plan__cta st-plan__cta--featured"
+      >Choose Premium</a>
+    </div>
+
+    {{! Unlimited }}
+    <div class="st-plan">
+      <div class="st-plan__name">Unlimited</div>
+      <div class="st-plan__price">$100</div>
+      <div class="st-plan__period">/month</div>
+      <div class="st-plan__divider"></div>
+      <ul class="st-plan__features">
+        <li class="st-plan__feature">Optimized Client/Accountant Interface</li>
+        <li class="st-plan__feature">Unlimited Clients</li>
+        <li class="st-plan__feature">2 TB Cloud Storage</li>
+        <li class="st-plan__feature">Schedule Client Emails</li>
+        <li class="st-plan__feature">Dedicated Email Server</li>
+      </ul>
+      <a href="/auth/signup?value=isUnlimited" class="st-plan__cta">Choose
+        Unlimited</a>
+    </div>
+
+  </div>
+</section>
+
+{{! ─── REGISTER ──────────────────────────────────────────── }}
+<section class="st-section st-register" id="register">
+  <div>
+    <span class="st-section-label">Get started</span>
+    <h2 class="st-h2">Register today.</h2>
+    <p class="st-register__desc">
+      Join thousands of accountants already using SpreadTax. Your first account
+      is completely free — no credit card needed.
+    </p>
+  </div>
+
+  <div>
+    {{! Plan selector tabs — same radio inputs as the original, restyled }}
+    <form
+      novalidate
+      action="/signup"
+      method="POST"
+      class="st-form"
+      id="st-reg-form"
+    >
+      <div class="st-reg-tabs" role="group" aria-label="Account type">
+        <label class="is-active">
+          <input
+            type="radio"
+            name="accountType"
+            value="isFree"
+            autocomplete="off"
+            checked
+          />
+          Free
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="accountType"
+            value="isPremium"
+            autocomplete="off"
+          />
+          Premium
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="accountType"
+            value="isUnlimited"
+            autocomplete="off"
+          />
+          Unlimited
+        </label>
+      </div>
+
+      <div class="st-field">
+        <label for="st-username">Username</label>
+        <input
+          id="st-username"
+          type="text"
+          name="username"
+          placeholder="jane.accountant"
+          autocomplete="username"
+          required
+        />
+      </div>
+
+      <div class="st-field">
+        <label for="st-email">Email</label>
+        <input
+          id="st-email"
+          type="email"
+          name="email"
+          placeholder="jane@firm.com"
+          autocomplete="email"
+          required
+        />
+      </div>
+
+      <div class="st-field">
+        <label for="st-password">Password</label>
+        <input
+          id="st-password"
+          type="password"
+          name="password"
+          placeholder="••••••••"
+          autocomplete="new-password"
+          required
+        />
+      </div>
+
+      <button class="st-form__submit" type="submit" id="st-submit-btn">
+        Create free account
+      </button>
+    </form>
+
+    {{#if errorMessage}}
+      <div class="st-alert" role="alert">
+        {{errorMessage}}
+      </div>
+    {{/if}}
+  </div>
+</section>
+
+{{! ─── SCRIPTS ───────────────────────────────────────────── }}
+<script>
+  (function () { /* ── Plan tab active-state ── */ const planLabels = { isFree:
+  'Create free account', isPremium: 'Start Premium plan', isUnlimited: 'Start
+  Unlimited plan' }; const tabs = document.querySelectorAll('.st-reg-tabs
+  label'); const radios = document.querySelectorAll('.st-reg-tabs
+  input[type="radio"]'); const submitBtn =
+  document.getElementById('st-submit-btn'); function syncTabs () {
+  radios.forEach(function (radio, i) { tabs[i].classList.toggle('is-active',
+  radio.checked); if (radio.checked && submitBtn) { submitBtn.textContent =
+  planLabels[radio.value] || 'Register today'; } }); } radios.forEach(function
+  (radio) { radio.addEventListener('change', syncTabs); }); /* Pre-select from
+  URL param (e.g. /auth/signup?value=isPremium link) */ const urlParams = new
+  URLSearchParams(window.location.search); const urlValue =
+  urlParams.get('value'); if (urlValue) { radios.forEach(function (radio) { if
+  (radio.value === urlValue) radio.checked = true; }); } syncTabs(); /* ── Form
+  validation ── */ var form = document.getElementById('st-reg-form'); if (form)
+  { form.addEventListener('submit', function (e) { if (!form.checkValidity()) {
+  e.preventDefault(); form.querySelectorAll('.st-field').forEach(function (f) {
+  f.classList.add('was-validated'); }); } }); } /* ── Scroll-reveal on plan
+  cards and stat blocks ── */ if ('IntersectionObserver' in window) { var
+  revealEls = document.querySelectorAll('.st-plan, .st-stat,
+  .st-features__item'); revealEls.forEach(function (el) { el.style.opacity =
+  '0'; el.style.transform = 'translateY(18px)'; el.style.transition = 'opacity
+  0.5s ease, transform 0.5s ease'; }); var io = new
+  IntersectionObserver(function (entries) { entries.forEach(function (entry) {
+  if (entry.isIntersecting) { entry.target.style.opacity = '1';
+  entry.target.style.transform = 'translateY(0)'; io.unobserve(entry.target); }
+  }); }, { threshold: 0.12 }); revealEls.forEach(function (el) { io.observe(el);
+  }); } })();
+</script>
